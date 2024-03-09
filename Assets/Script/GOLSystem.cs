@@ -12,13 +12,17 @@ partial struct GOLSystem : ISystem,ISystemStartStop
     private NativeArray<bool> _cellStates;
     private NativeArray<bool> _cellNewStates;
     private CGOFGridComponent _config;
+    public void OnCreate(ref SystemState state)
+    {
+        state.RequireForUpdate<CGOFGridComponent>();
+        state.RequireForUpdate<MainThread>();
+    }
 
     [BurstCompile]
     public void OnStartRunning(ref SystemState state)
     {
 
         _config=  SystemAPI.GetSingleton<CGOFGridComponent>();
-
         
         var random = Random.CreateFromIndex(_config.Seed);
 

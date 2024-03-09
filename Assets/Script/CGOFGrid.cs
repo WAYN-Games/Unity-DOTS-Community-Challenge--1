@@ -1,4 +1,4 @@
-using Unity.Entities;
+using System;using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -10,6 +10,7 @@ class CGOFGrid : MonoBehaviour
     public GameObject CellPrefab;
     public Color Alive;
     public Color Dead;
+    public Version Version;
 }
 
 class CGOFGridBaker : Baker<CGOFGrid>
@@ -27,6 +28,17 @@ class CGOFGridBaker : Baker<CGOFGrid>
             Alive = new float4(authoring.Alive.r, authoring.Alive.g, authoring.Alive.b, authoring.Alive.a),
             Dead =  new float4(authoring.Dead.r, authoring.Dead.g, authoring.Dead.b, authoring.Dead.a),
         });
+
+
+        switch (authoring.Version)
+        {   
+            case Version.MainThread:
+                AddComponent<MainThread>(bakingEntity);
+                break;
+            case Version.Threaded:
+                AddComponent<Threaded>(bakingEntity);
+                break;
+        }
     }
 }
 
@@ -39,4 +51,15 @@ public struct CGOFGridComponent : IComponentData
     public Entity CellPrefab;
     public float4 Alive;
     public float4 Dead;
+}
+
+public struct MainThread : IComponentData
+{
+}
+public struct Threaded : IComponentData
+{
+}
+public enum Version{
+    MainThread,
+    Threaded
 }
