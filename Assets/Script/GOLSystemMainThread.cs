@@ -41,7 +41,7 @@ partial struct GolSystemMainThread : ISystem,ISystemStartStop
             });
             
             int x = i % _config.Width;
-            int y = i / _config.Height;
+            int y = i / _config.Width;
             
             state.EntityManager.SetComponentData(_cellEntities[i],
                 LocalTransform.FromPosition(

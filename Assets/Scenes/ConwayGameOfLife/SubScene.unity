@@ -164,8 +164,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Seed: 5
-  Width: 1024
-  Height: 1024
+  Width: 2048
+  Height: 2048
   CellPrefab: {fileID: 4826799837215361391, guid: ce588be46dfa0ad408cf5e8d5acf586e,
     type: 3}
   Alive: {r: 1, g: 1, b: 1, a: 1}
