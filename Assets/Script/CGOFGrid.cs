@@ -38,6 +38,9 @@ class CGOFGridBaker : Baker<CGOFGrid>
             case Version.Threaded:
                 AddComponent<Threaded>(bakingEntity);
                 break;
+            case Version.MultiThreaded:
+                AddComponent<MultiThreaded>(bakingEntity);
+                break;
         }
     }
 }
@@ -53,13 +56,23 @@ public struct CGOFGridComponent : IComponentData
     public float4 Dead;
 }
 
+public struct CellIndex : IComponentData
+{
+    public int Value;
+}
+
+
 public struct MainThread : IComponentData
 {
 }
 public struct Threaded : IComponentData
 {
 }
+public struct MultiThreaded : IComponentData
+{
+}
 public enum Version{
     MainThread,
-    Threaded
+    Threaded,
+    MultiThreaded
 }

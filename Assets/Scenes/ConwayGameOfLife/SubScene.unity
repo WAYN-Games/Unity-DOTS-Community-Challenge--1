@@ -163,14 +163,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f06b41fc89e68fa4a935c9288b39f21b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Seed: 0
-  Width: 512
-  Height: 512
+  Seed: 5
+  Width: 1024
+  Height: 1024
   CellPrefab: {fileID: 4826799837215361391, guid: ce588be46dfa0ad408cf5e8d5acf586e,
     type: 3}
   Alive: {r: 1, g: 1, b: 1, a: 1}
   Dead: {r: 0, g: 0, b: 0, a: 1}
-  Version: 0
+  Version: 2
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -1,12 +1,11 @@
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
 
-partial struct GOLSystem : ISystem,ISystemStartStop
+partial struct GolSystemMainThread : ISystem,ISystemStartStop
 {
     private NativeArray<Entity> _cellEntities;
     private NativeArray<bool> _cellStates;
@@ -45,9 +44,8 @@ partial struct GOLSystem : ISystem,ISystemStartStop
             int y = i / _config.Height;
             
             state.EntityManager.SetComponentData(_cellEntities[i],
-                LocalTransform.FromPositionRotation(
-                    new float3(x-_config.Width/2f, 0, y-_config.Height/2f),
-                    quaternion.EulerXYZ(90, 0, 0)
+                LocalTransform.FromPosition(
+                    new float3(x-_config.Width/2f, 0, y-_config.Height/2f)
                 ));
         }
     }
@@ -61,14 +59,14 @@ partial struct GOLSystem : ISystem,ISystemStartStop
             int x = i % _config.Width;
             int y = i / _config.Width;
             
-            var n1 = _cellStates[IndexFromCoordinateWithWrapAround(x-1,y+1,_config.Width,_config.Height)] ? 1 : 0; 
-            var n2 = _cellStates[IndexFromCoordinateWithWrapAround(x,y+1,_config.Width,_config.Height)] ? 1 : 0;
-            var n3 = _cellStates[IndexFromCoordinateWithWrapAround(x+1,y+1,_config.Width,_config.Height)] ? 1 : 0;
-            var n4 = _cellStates[IndexFromCoordinateWithWrapAround(x-1,y,_config.Width,_config.Height)] ? 1 : 0;
-            var n5 = _cellStates[IndexFromCoordinateWithWrapAround(x+1,y,_config.Width,_config.Height)] ? 1 : 0;
-            var n6 = _cellStates[IndexFromCoordinateWithWrapAround(x-1,y-1,_config.Width,_config.Height)] ? 1 : 0;
-            var n7 = _cellStates[IndexFromCoordinateWithWrapAround(x,y-1,_config.Width,_config.Height)] ? 1 : 0;
-            var n8 = _cellStates[IndexFromCoordinateWithWrapAround(x+1,y-1,_config.Width,_config.Height)] ? 1 : 0;
+            var n1 = _cellStates[GolUtilities.IndexFromCoordinateWithWrapAround(x-1,y+1,_config.Width,_config.Height)] ? 1 : 0; 
+            var n2 = _cellStates[GolUtilities.IndexFromCoordinateWithWrapAround(x,y+1,_config.Width,_config.Height)] ? 1 : 0;
+            var n3 = _cellStates[GolUtilities.IndexFromCoordinateWithWrapAround(x+1,y+1,_config.Width,_config.Height)] ? 1 : 0;
+            var n4 = _cellStates[GolUtilities.IndexFromCoordinateWithWrapAround(x-1,y,_config.Width,_config.Height)] ? 1 : 0;
+            var n5 = _cellStates[GolUtilities.IndexFromCoordinateWithWrapAround(x+1,y,_config.Width,_config.Height)] ? 1 : 0;
+            var n6 = _cellStates[GolUtilities.IndexFromCoordinateWithWrapAround(x-1,y-1,_config.Width,_config.Height)] ? 1 : 0;
+            var n7 = _cellStates[GolUtilities.IndexFromCoordinateWithWrapAround(x,y-1,_config.Width,_config.Height)] ? 1 : 0;
+            var n8 = _cellStates[GolUtilities.IndexFromCoordinateWithWrapAround(x+1,y-1,_config.Width,_config.Height)] ? 1 : 0;
 
             var nbNeighboursAlive = n1 + n2 + n3 + n4 + n5 + n6 + n7 + n8;
 
@@ -100,17 +98,12 @@ partial struct GOLSystem : ISystem,ISystemStartStop
     }
 
 
-    private static int IndexFromCoordinateWithWrapAround(int x, int y,int width, int height)
-    {
-        x = (width+x) % width;
-        y = (height+y) % height;
-        return x + y * width;
-    }
-
     [BurstCompile]
     public void OnStopRunning(ref SystemState state)
     {
         _cellEntities.Dispose();
+        _cellStates.Dispose();
+        _cellNewStates.Dispose();
     }
 
 }
