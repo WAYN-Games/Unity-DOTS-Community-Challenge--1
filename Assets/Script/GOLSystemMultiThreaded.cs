@@ -36,7 +36,7 @@ partial struct GOLSystemMultiThreaded : ISystem,ISystemStartStop
         _cellStates = new NativeArray<bool>(cellCount, Allocator.Persistent);
         _cellNewStates = new NativeArray<bool>(cellCount, Allocator.Persistent);
 
-        var alteredPrefab = state.EntityManager.Instantiate(_config.CellPrefab);
+        var alteredPrefab = state.EntityManager.Instantiate(_config.CubeCellPrefab);
         state.EntityManager.AddComponent<CellIndex>(alteredPrefab);
         state.EntityManager.Instantiate(alteredPrefab, cellEntities);
         

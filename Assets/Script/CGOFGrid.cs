@@ -1,13 +1,15 @@
 using System;using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 class CGOFGrid : MonoBehaviour
 {
     public uint Seed;
     public int Width;
     public int Height;
-    public GameObject CellPrefab;
+    public GameObject CubeCellPrefab;
+    public GameObject QuadCellPrefab;
     public Color Alive;
     public Color Dead;
     public Version Version;
@@ -24,7 +26,8 @@ class CGOFGridBaker : Baker<CGOFGrid>
             Seed = authoring.Seed,
             Width = authoring.Width,
             Height = authoring.Height,
-            CellPrefab = GetEntity(authoring.CellPrefab, TransformUsageFlags.Renderable),
+            CubeCellPrefab = GetEntity(authoring.CubeCellPrefab, TransformUsageFlags.Renderable),
+            QuadCellPrefab = GetEntity(authoring.QuadCellPrefab, TransformUsageFlags.Renderable),
             Alive = new float4(authoring.Alive.r, authoring.Alive.g, authoring.Alive.b, authoring.Alive.a),
             Dead =  new float4(authoring.Dead.r, authoring.Dead.g, authoring.Dead.b, authoring.Dead.a),
         });
@@ -41,6 +44,9 @@ class CGOFGridBaker : Baker<CGOFGrid>
             case Version.MultiThreaded:
                 AddComponent<MultiThreaded>(bakingEntity);
                 break;
+            case Version.MultiThreadedOneTexture:
+                AddComponent<MultiThreadedOneTexture>(bakingEntity);
+                break;
         }
     }
 }
@@ -51,7 +57,8 @@ public struct CGOFGridComponent : IComponentData
     public uint Seed;
     public int Width;
     public int Height;
-    public Entity CellPrefab;
+    public Entity CubeCellPrefab;
+    public Entity QuadCellPrefab;
     public float4 Alive;
     public float4 Dead;
 }
@@ -71,8 +78,12 @@ public struct Threaded : IComponentData
 public struct MultiThreaded : IComponentData
 {
 }
+public struct MultiThreadedOneTexture : IComponentData
+{
+}
 public enum Version{
     MainThread,
     Threaded,
-    MultiThreaded
+    MultiThreaded,
+    MultiThreadedOneTexture
 }

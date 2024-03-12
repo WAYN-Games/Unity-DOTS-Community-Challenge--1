@@ -29,7 +29,7 @@ partial struct GolSystemMainThread : ISystem,ISystemStartStop
         _cellEntities = new NativeArray<Entity>(cellCount, Allocator.Persistent);
         _cellStates = new NativeArray<bool>(cellCount, Allocator.Persistent);
         _cellNewStates = new NativeArray<bool>(cellCount, Allocator.Persistent);
-        state.EntityManager.Instantiate(_config.CellPrefab, _cellEntities);
+        state.EntityManager.Instantiate(_config.CubeCellPrefab, _cellEntities);
         
         for (int i = 0; i < cellCount; i++)
         {
